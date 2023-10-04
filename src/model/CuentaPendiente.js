@@ -8,6 +8,13 @@ const cuentaPendienteSchema = new mongoose.Schema({
   monto_restante: {
     type: Number,
     required: true,
+    min: 0,
+    validate: {
+      validator: function (value) {
+        return value >= 0;
+      },
+      message: "El monto restante debe ser mayor o igual a 0",
+    },
   },
 });
 

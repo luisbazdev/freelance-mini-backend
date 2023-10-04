@@ -4,16 +4,38 @@ const express = require("express");
 const asyncWrapper = require("../utils/asyncWrapper");
 
 const cobroRouter = express.Router();
-
+/**
+ * Ruta para obtener todos los cobros.
+ * @name GET /cobros
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cobro[]} La respuesta HTTP que contiene la lista de cobros.
+ * @throws {Error} Si ocurre un error al obtener los cobros.
+ */
 cobroRouter.get("/", async (request, response) => {
   try {
-    const cobros = await asyncWrapper(cobroController.findAllCobros);
+    const { nombre, gte, lt } = request.query;
+    const cobros = await asyncWrapper(cobroController.findAllCobros, [
+      nombre,
+      gte,
+      lt,
+    ]);
     return response.status(200).json({ cobros });
   } catch (error) {
     return response.status(500).end();
   }
 });
-
+/**
+ * Ruta para obtener un cobro por su ID.
+ * @name GET /cobros/:id
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cobro} La respuesta HTTP que contiene el cobro con el ID especificado.
+ * @throws {CastError} Si el ID proporcionado no es valido.
+ * @throws {Error} Si ocurre un error al obtener el cobro.
+ */
 cobroRouter.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
@@ -29,7 +51,16 @@ cobroRouter.get("/:id", async (request, response) => {
     }
   }
 });
-
+/**
+ * Ruta para crear un cobro.
+ * @name POST /cobros
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cobro} La respuesta HTTP que contiene el cobro creado.
+ * @throws {ValidationError} Si los campos del cobro proporcionado no son validos.
+ * @throws {Error} Si ocurre un error al crear el cobro.
+ */
 cobroRouter.post("/", async (request, response) => {
   try {
     const { id_cliente, id_cuenta_pendiente, monto_cobrado } = request.body;
@@ -50,11 +81,26 @@ cobroRouter.post("/", async (request, response) => {
     }
   }
 });
-
+/**
+ * Ruta para actualizar un cobro por su ID.
+ * @name PUT /cobros/:id
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cobro} La respuesta HTTP que contiene el cobro actualizado.
+ * @throws {CastError} Si el ID proporcionado no es valido.
+ * @throws {Error} Si ocurre un error al actualizar el cobro.
+ */
 cobroRouter.put("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cobro = await asyncWrapper(cobroController.updateCobroById, [id]);
+    const _cobro = {
+      monto_cobrado: request.body.monto_cobrado,
+    };
+    const cobro = await asyncWrapper(cobroController.updateCobroById, [
+      id,
+      _cobro,
+    ]);
     return response.status(200).json({ cobro });
   } catch (error) {
     switch (error.name) {
@@ -66,7 +112,16 @@ cobroRouter.put("/:id", async (request, response) => {
     }
   }
 });
-
+/**
+ * Ruta para eliminar un cobro por su ID.
+ * @name DELETE /cobros/:id
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cobro} La respuesta HTTP que contiene el cobro eliminado.
+ * @throws {CastError} Si el ID proporcionado no es valido.
+ * @throws {Error} Si ocurre un error al actualizar el cobro.
+ */
 cobroRouter.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;

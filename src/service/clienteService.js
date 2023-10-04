@@ -1,25 +1,62 @@
 const clienteRepository = require("../repository/clienteRepository");
-const asyncWrapper = require('../utils/asyncWrapper')
+const asyncWrapper = require("../utils/asyncWrapper");
 
 const clienteService = {
+  /**
+   * Encuentra todos los clientes.
+   * @function findAllClients
+   * @returns {Promise<Cliente[]>} Una promesa que se resuelve con una lista de clientes.
+   */
   findAllClients: async function () {
     const clientes = await asyncWrapper(clienteRepository.findAllClients);
     return clientes;
   },
+  /**
+   * Encuentra un cliente por su ID.
+   * @function findClientById
+   * @param {string} id - El ID del cliente a buscar.
+   * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente encontrado.
+   */
   findClientById: async function (id) {
     const cliente = await asyncWrapper(clienteRepository.findClientById, [id]);
     return cliente;
   },
-  saveClient: async function (_client) {
-    const cliente = await asyncWrapper(clienteRepository.saveClient, [_client]);
+  /**
+   * Guarda un cliente.
+   * @function saveClient
+   * @param {Cliente} _cliente - El cliente a guardar.
+   * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente guardado.
+   */
+  saveClient: async function (id_cliente) {
+    const cliente = await asyncWrapper(clienteRepository.saveClient, [
+      _cliente,
+    ]);
     return cliente;
   },
+  /**
+   * Actualiza un cliente por su ID.
+   * @function updateClientById
+   * @param {string} id - El ID del cliente a actualizar.
+   * @param {Cliente} _cliente - El cliente actualizado.
+   * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente actualizado.
+   */
   updateClientById: async function (id, _cliente) {
-    const cliente = await asyncWrapper(clienteRepository.updateClientById, [id, _cliente]);
+    const cliente = await asyncWrapper(clienteRepository.updateClientById, [
+      id,
+      _cliente,
+    ]);
     return cliente;
   },
+  /**
+   * Elimina un cliente por su ID.
+   * @function deleteClientById
+   * @param {string} id - El ID del cliente a eliminar.
+   * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente eliminado.
+   */
   deleteClientById: async function (id) {
-    const cliente = await asyncWrapper(clienteRepository.deleteClientById, [id]);
+    const cliente = await asyncWrapper(clienteRepository.deleteClientById, [
+      id,
+    ]);
     return cliente;
   },
 };

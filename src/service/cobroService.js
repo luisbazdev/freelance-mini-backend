@@ -5,22 +5,62 @@ const Cobro = require("../model/Cobro");
 
 const cobroRepository = require("../repository/cobroRepository");
 const cuentaPendienteRepository = require("../repository/cuentaPendienteRepository");
+const clienteRepository = require("../repository/clienteRepository");
 
-const asyncWrapper = require('../utils/asyncWrapper')
+const asyncWrapper = require("../utils/asyncWrapper");
 
 const cobroService = {
-  findAllCobros: async function () {
-      const cobros = await asyncWrapper(cobroRepository.findAllCobros)
-      return cobros;
+  /**
+   * Encuentra todos los cobros.
+   * @function findAllCobros
+   * @returns {Promise<Cobro[]>} Una promesa que se resuelve con una lista de cobros.
+   */
+  findAllCobros: async function (gte, lt) {
+    const cobros = await asyncWrapper(cobroRepository.findAllCobros, [
+      Number(gte),
+      Number(lt),
+    ]);
+    return cobros;
   },
+  /**
+   * Encuentra todos los cobros que pertenezcan a un cliente con un nombre especifico.
+   * @function findAllCobrosByName
+   * @param {string} nombre - El nombre del cliente a buscar.
+   * @param {string} gte - El minimo monto cobrado.
+   * @param {string} lt - El maximo monto cobrado.
+   * @returns {Promise<Cobro[]>} Una promesa que se resuelve con una lista de cobros.
+   */
+  findAllCobrosByName: async function (nombre, gte, lt) {
+    const cliente = await asyncWrapper(clienteRepository.findFirstByName, [
+      nombre,
+    ]);
+    const cobros = await asyncWrapper(cobroRepository.findAllCobrosByClientId, [
+      cliente.id,
+      Number(gte),
+      Number(lt),
+    ]);
+    return cobros;
+  },
+  /**
+   * Encuentra un cobro por su ID.
+   * @function findCobroById
+   * @param {string} id - El ID del cobro a buscar.
+   * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro encontrado.
+   */
   findCobroById: async function (id) {
-      const cobro = await asyncWrapper(cobroRepository.findCobroById, [id]);
-      return cobro;
+    const cobro = await asyncWrapper(cobroRepository.findCobroById, [id]);
+    return cobro;
   },
+  /**
+   * Guarda un cobro.
+   * @function saveCobro
+   * @param {Cobro} _cobro - El cobro a guardar.
+   * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro guardado.
+   */
   saveCobro: async function (_cobro) {
-    // remember to close the session
+    // Recordar cerrar la session...
+    const session = await mongoose.startSession();
     try {
-      const session = await mongoose.startSession();
       const { id_cliente, id_cuenta_pendiente, monto_cobrado } = _cobro;
 
       const cuentaPendiente =
@@ -28,47 +68,76 @@ const cobroService = {
           id_cuenta_pendiente
         );
 
-      if (cuentaPendiente.id_cliente != id_cliente)
-        throw new Error("Esta cuenta no pertenece al cliente!");
-
-      if (cuentaPendiente.monto_restante < monto_cobrado)
-        throw new Error("No puedes cobrar al cliente mas de lo que tiene!");
+      // Si la cuenta pendiente no le pertenece al cliente, o el
+      // monto a cobrar es mayor que el monto actual, terminar aqui
+      if (
+        cuentaPendiente.id_cliente != id_cliente ||
+        cuentaPendiente.monto_restante < monto_cobrado ||
+        !id_cliente ||
+        !id_cuenta_pendiente ||
+        monto_cobrado <= 0
+      ) {
+        const error = new Error("La validacion no fue exitosa");
+        error.name = "ValidationError";
+        throw error;
+      }
 
       session.startTransaction();
 
-      // restarle dinero al cliente
+      // Restarle dinero al cliente
+      // Recordar manejar error del monto restante en el router...
       await CuentaPendiente.findByIdAndUpdate(
         id_cuenta_pendiente,
         { $inc: { monto_restante: -monto_cobrado } },
         { session }
       );
 
-      // registrar cobro
-      const cobro = await Cobro.create(_cobro, { session });
+      // Registrar cobro
+      const cobro = await Cobro.create(
+        [
+          {
+            id_cliente: id_cliente,
+            id_cuenta_pendiente: id_cuenta_pendiente,
+            monto_cobrado: monto_cobrado,
+          },
+        ],
+        { session }
+      );
 
-      // Commit the transaction
       await session.commitTransaction();
-
       return cobro;
     } catch (error) {
       //await session.abortTransaction();
       throw error;
     }
     /*finally {
-      // End the session
       session.endSession();
-
-      // Close the MongoDB connection
       mongoose.connection.close();
     }*/
   },
+  /**
+   * Actualiza un cobro por su ID.
+   * @function updateCobroById
+   * @param {string} id - El ID del cobro a actualizar.
+   * @param {Cobro} _cobro - El cobro actualizado.
+   * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro actualizado.
+   */
   updateCobroById: async function (id, _cobro) {
-      const cobro = await asyncWrapper(cobroRepository.updateCobroById, [id, _cobro]);
-      return cobro;
+    const cobro = await asyncWrapper(cobroRepository.updateCobroById, [
+      id,
+      _cobro,
+    ]);
+    return cobro;
   },
+  /**
+   * Elimina un cobro por su ID.
+   * @function deleteCobroById
+   * @param {string} id - El ID del cobro a eliminar.
+   * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro eliminado.
+   */
   deleteCobroById: async function (id) {
-      const cobro = await asyncWrapper(cobroRepository.deleteCobroById, [id]);
-      return cobro;
+    const cobro = await asyncWrapper(cobroRepository.deleteCobroById, [id]);
+    return cobro;
   },
 };
 

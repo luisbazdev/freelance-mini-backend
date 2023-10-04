@@ -11,3 +11,5 @@ function createQueryObject(query, gte, lt) {
 
   return query;
 }
+
+module.exports = createQueryObject;

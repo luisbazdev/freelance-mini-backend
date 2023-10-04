@@ -4,7 +4,15 @@ const express = require("express");
 const asyncWrapper = require("../utils/asyncWrapper");
 
 const clienteRouter = express.Router();
-
+/**
+ * Ruta para obtener todos los clientes.
+ * @name GET /clientes
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cliente[]} La respuesta HTTP que contiene la lista de clientes.
+ * @throws {Error} Si ocurre un error al obtener los clientes.
+ */
 clienteRouter.get("/", async (request, response) => {
   try {
     const clientes = await asyncWrapper(clienteController.findAllClients);
@@ -13,8 +21,16 @@ clienteRouter.get("/", async (request, response) => {
     return response.status(500).end();
   }
 });
-
-// this method should work for multiple client id(s)
+/**
+ * Ruta para obtener un cliente por su ID.
+ * @name GET /clientes/:id
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cliente} La respuesta HTTP que contiene el cliente con el ID especificado.
+ * @throws {CastError} Si el ID proporcionado no es valido.
+ * @throws {Error} Si ocurre un error al obtener el cliente.
+ */
 clienteRouter.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
@@ -30,7 +46,16 @@ clienteRouter.get("/:id", async (request, response) => {
     }
   }
 });
-
+/**
+ * Ruta para crear un nuevo cliente.
+ * @name POST /clientes
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cliente} La respuesta HTTP que contiene el cliente creado.
+ * @throws {ValidationError} Si los campos del cliente proporcionado no son validos.
+ * @throws {Error} Si ocurre un error al crear el cliente.
+ */
 clienteRouter.post("/", async (request, response) => {
   try {
     const { name, avatar, no_cliente } = request.body;
@@ -53,7 +78,16 @@ clienteRouter.post("/", async (request, response) => {
     }
   }
 });
-
+/**
+ * Ruta para actualizar un cliente por su ID.
+ * @name PUT /clientes/:id
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cliente} La respuesta HTTP que contiene el cliente actualizado.
+ * @throws {CastError} Si el ID proporcionado no es valido.
+ * @throws {Error} Si ocurre un error al actualizar el cliente.
+ */
 clienteRouter.put("/:id", async (request, response) => {
   try {
     const { id } = request.params;
@@ -71,7 +105,16 @@ clienteRouter.put("/:id", async (request, response) => {
     }
   }
 });
-
+/**
+ * Ruta para eliminar un cliente por su ID.
+ * @name DELETE /clientes/:id
+ * @function
+ * @param {Object} request - El objeto de solicitud HTTP.
+ * @param {Object} response - El objeto de respuesta HTTP.
+ * @returns {Cliente} La respuesta HTTP que contiene el cliente eliminado.
+ * @throws {CastError} Si el ID proporcionado no es valido.
+ * @throws {Error} Si ocurre un error al actualizar el cliente.
+ */
 clienteRouter.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
