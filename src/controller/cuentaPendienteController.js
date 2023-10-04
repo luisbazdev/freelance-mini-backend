@@ -1,68 +1,48 @@
 const cuentaPendienteService = require("../service/cuentaPendienteService");
+const asyncWrapper = require("../utils/asyncWrapper");
 
 const cuentaPendienteController = {
   findAllCuentaPendientes: async function (nombre, gte, lt) {
-    try {
-      let cuentaPendientes;
+    let cuentaPendientes;
 
-      if (nombre) {
-        cuentaPendientes =
-          await cuentaPendienteService.findAllCuentaPendientesByName(
-            nombre,
-            gte,
-            lt
-          );
-        return cuentaPendientes;
-      }
-
-      cuentaPendientes = await cuentaPendienteService.findAllCuentaPendientes(
-        gte,
-        lt
+    if (nombre) {
+      cuentaPendientes = await asyncWrapper(
+        cuentaPendienteService.findAllCuentaPendientesByName,
+        [nombre, gte, lt]
       );
       return cuentaPendientes;
-    } catch (error) {
-      console.log("error");
     }
+
+    cuentaPendientes = await asyncWrapper(
+      cuentaPendienteService.findAllCuentaPendientes[(gte, lt)]
+    );
+    return cuentaPendientes;
   },
   findCuentaPendienteById: async function (id) {
-    try {
-      const cuentaPendiente =
-        await cuentaPendienteService.findCuentaPendienteById(id);
-      return cuentaPendiente;
-    } catch (error) {
-      console.log(error);
-    }
+    const cuentaPendiente = await asyncWrapper(
+      cuentaPendienteService.findCuentaPendienteById,
+      [id]
+    );
+    return cuentaPendiente;
   },
   saveCuentaPendiente: async function (_cuentaPendiente) {
-    try {
-      const cuentaPendiente = await cuentaPendienteService.saveCuentaPendiente(
-        _cuentaPendiente
-      );
-      return cuentaPendiente;
-    } catch (error) {
-      console.log(error);
-    }
+    const cuentaPendiente = await asyncWrapper(
+      cuentaPendienteService.saveCuentaPendiente[_cuentaPendiente]
+    );
+    return cuentaPendiente;
   },
   updateCuentaPendienteById: async function (id, _cuentaPendiente) {
-    try {
-      const cuentaPendiente =
-        await cuentaPendienteService.updateCuentaPendienteById(
-          id,
-          _cuentaPendiente
-        );
-      return cuentaPendiente;
-    } catch (error) {
-      console.log(error);
-    }
+    const cuentaPendiente = await asyncWrapper(
+      cuentaPendienteService.updateCuentaPendienteById([id, _cuentaPendiente])
+    );
+    return cuentaPendiente;
   },
   deleteCuentaPendienteById: async function (id) {
-    try {
-      const cuentaPendiente =
-        await cuentaPendienteService.deleteCuentaPendienteById(id);
-      return cuentaPendiente;
-    } catch (error) {
-      console.log(error);
-    }
+    const cuentaPendiente = await asyncWrapper(
+      cuentaPendienteService.deleteCuentaPendienteById,
+      [id]
+    );
+    return cuentaPendiente;
   },
 };
 

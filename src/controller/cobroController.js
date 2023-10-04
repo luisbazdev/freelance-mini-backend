@@ -1,45 +1,29 @@
-const cobroService = require('../service/cobroService');
+const cobroService = require("../service/cobroService");
+const asyncWrapper = require("../utils/asyncWrapper");
 
 const cobroController = {
   findAllCobros: async function () {
-    try {
-      const cobros = await cobroService.findAllCobros();
-      return cobros;
-    } catch (error) {
-      console.log("error");
-    }
+    const cobros = await asyncWrapper(cobroService.findAllCobros);
+    return cobros;
   },
   findCobroById: async function (id) {
-    try {
-      const cobro = await cobroService.findCobroById(id);
-      return cobro;
-    } catch (error) {
-      console.log(error);
-    }
+    const cobro = await asyncWrapper(cobroService.findCobroById, [id]);
+    return cobro;
   },
   saveCobro: async function (_cobro) {
-    try {
-      const cobro = await cobroService.saveCobro(_cobro);
-      return cobro;
-    } catch (error) {
-      console.log(error);
-    }
+    const cobro = await asyncWrapper(cobroService.saveCobro, [_cobro]);
+    return cobro;
   },
   updateCobroById: async function (id, _cobro) {
-    try {
-      const cobro = await cobroService.updateCobroById(id, _cobro);
-      return cobro;
-    } catch (error) {
-      console.log(error);
-    }
+    const cobro = await asyncWrapper(cobroService.updateCobroById, [
+      id,
+      _cobro,
+    ]);
+    return cobro;
   },
   deleteCobroById: async function (id) {
-    try {
-      const cobro = await cobroService.deleteCobroById(id);
-      return cobro;
-    } catch (error) {
-      console.log(error);
-    }
+    const cobro = await asyncWrapper(cobroService.deleteCobroById, [id]);
+    return cobro;
   },
 };
 

@@ -6,7 +6,7 @@ const cobroRepository = {
       const cobros = await Cobro.find({});
       return cobros;
     } catch (error) {
-      console.log("error");
+      throw error;
     }
   },
   findCobroById: async function (id) {
@@ -14,7 +14,7 @@ const cobroRepository = {
       const cobro = await Cobro.findById(id);
       return cobro;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   saveCobro: async function (_cobro) {
@@ -22,7 +22,7 @@ const cobroRepository = {
       const cobro = await Cobro.create(_cobro);
       return cobro;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   updateCobroById: async function (id, _cobro) {
@@ -30,7 +30,7 @@ const cobroRepository = {
       const cobro = await Cobro.findByIdAndUpdate(id, _cobro);
       return cobro;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   deleteCobroById: async function (id) {
@@ -38,7 +38,7 @@ const cobroRepository = {
       const cobro = await Cobro.findByIdAndRemove(id);
       return cobro;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
 };

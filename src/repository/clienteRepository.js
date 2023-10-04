@@ -8,7 +8,7 @@ const clienteRepository = {
       });
       return cliente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   findAllClients: async function () {
@@ -16,7 +16,7 @@ const clienteRepository = {
       const clientes = await Cliente.find({});
       return clientes;
     } catch (error) {
-      console.log("error");
+      throw error;
     }
   },
   findClientById: async function (id) {
@@ -24,7 +24,7 @@ const clienteRepository = {
       const cliente = await Cliente.findById(id);
       return cliente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   saveClient: async function (_client) {
@@ -32,7 +32,7 @@ const clienteRepository = {
       const cliente = await Cliente.create(_client);
       return cliente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   updateClientById: async function (id, _cliente) {
@@ -40,7 +40,7 @@ const clienteRepository = {
       const cliente = await Cliente.findByIdAndUpdate(id, _cliente);
       return cliente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   deleteClientById: async function (id) {
@@ -48,7 +48,7 @@ const clienteRepository = {
       const cliente = await Cliente.findByIdAndRemove(id);
       return cliente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
 };

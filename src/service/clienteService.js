@@ -1,47 +1,26 @@
 const clienteRepository = require("../repository/clienteRepository");
-
-// perform validations here...
+const asyncWrapper = require('../utils/asyncWrapper')
 
 const clienteService = {
   findAllClients: async function () {
-    try {
-      const clientes = await clienteRepository.findAllClients();
-      return clientes;
-    } catch (error) {
-      console.log("error");
-    }
+    const clientes = await asyncWrapper(clienteRepository.findAllClients);
+    return clientes;
   },
   findClientById: async function (id) {
-    try {
-      const cliente = await clienteRepository.findClientById(id);
-      return cliente;
-    } catch (error) {
-      console.log(error);
-    }
+    const cliente = await asyncWrapper(clienteRepository.findClientById, [id]);
+    return cliente;
   },
   saveClient: async function (_client) {
-    try {
-      const cliente = await clienteRepository.saveClient(_client);
-      return cliente;
-    } catch (error) {
-      console.log(error);
-    }
+    const cliente = await asyncWrapper(clienteRepository.saveClient, [_client]);
+    return cliente;
   },
   updateClientById: async function (id, _cliente) {
-    try {
-      const cliente = await clienteRepository.updateClientById(id, _cliente);
-      return cliente;
-    } catch (error) {
-      console.log(error);
-    }
+    const cliente = await asyncWrapper(clienteRepository.updateClientById, [id, _cliente]);
+    return cliente;
   },
   deleteClientById: async function (id) {
-    try {
-      const cliente = await clienteRepository.deleteClientById(id);
-      return cliente;
-    } catch (error) {
-      console.log(error);
-    }
+    const cliente = await asyncWrapper(clienteRepository.deleteClientById, [id]);
+    return cliente;
   },
 };
 

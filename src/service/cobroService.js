@@ -6,24 +6,16 @@ const Cobro = require("../model/Cobro");
 const cobroRepository = require("../repository/cobroRepository");
 const cuentaPendienteRepository = require("../repository/cuentaPendienteRepository");
 
-// perform validations here...
+const asyncWrapper = require('../utils/asyncWrapper')
 
 const cobroService = {
   findAllCobros: async function () {
-    try {
-      const cobros = await cobroRepository.findAllCobros();
+      const cobros = await asyncWrapper(cobroRepository.findAllCobros)
       return cobros;
-    } catch (error) {
-      console.log("error");
-    }
   },
   findCobroById: async function (id) {
-    try {
-      const cobro = await cobroRepository.findCobroById(id);
+      const cobro = await asyncWrapper(cobroRepository.findCobroById, [id]);
       return cobro;
-    } catch (error) {
-      console.log(error);
-    }
   },
   saveCobro: async function (_cobro) {
     // remember to close the session
@@ -45,7 +37,7 @@ const cobroService = {
       session.startTransaction();
 
       // restarle dinero al cliente
-      const cuenta = await CuentaPendiente.findByIdAndUpdate(
+      await CuentaPendiente.findByIdAndUpdate(
         id_cuenta_pendiente,
         { $inc: { monto_restante: -monto_cobrado } },
         { session }
@@ -60,7 +52,7 @@ const cobroService = {
       return cobro;
     } catch (error) {
       //await session.abortTransaction();
-      console.log(error);
+      throw error;
     }
     /*finally {
       // End the session
@@ -71,20 +63,12 @@ const cobroService = {
     }*/
   },
   updateCobroById: async function (id, _cobro) {
-    try {
-      const cobro = await cobroRepository.updateCobroById(id, _cobro);
+      const cobro = await asyncWrapper(cobroRepository.updateCobroById, [id, _cobro]);
       return cobro;
-    } catch (error) {
-      console.log(error);
-    }
   },
   deleteCobroById: async function (id) {
-    try {
-      const cobro = await cobroRepository.deleteCobroById(id);
+      const cobro = await asyncWrapper(cobroRepository.deleteCobroById, [id]);
       return cobro;
-    } catch (error) {
-      console.log(error);
-    }
   },
 };
 

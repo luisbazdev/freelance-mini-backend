@@ -1,47 +1,27 @@
 const CuentaPendiente = require("../model/CuentaPendiente");
+const createQueryObject = require("../utils/query");
 
 const cuentaPendienteRepository = {
   findAllCuentaPendientes: async function (gte, lt) {
     try {
-      const query = {}
-
-      if(!isNaN(gte)){
-        query.monto_restante = {};
-        query.monto_restante.$gte = gte;
-      }
-      
-      if(!isNaN(lt)){
-        query.monto_restante = query.monto_restante || {};
-        query.monto_restante.$lt = lt;
-      }
+      const query = {};
+      query = createQueryObject(query, gte, lt);
 
       const cuentaPendientes = await CuentaPendiente.find(query);
       return cuentaPendientes;
     } catch (error) {
-      console.log(error)
+      throw error;
     }
   },
   findAllCuentaPendientesByClientId: async function (clientId, gte, lt) {
     try {
-      // create util function for this
-      const query = {
-        id_cliente: clientId
-      }
+      const query = { id_cliente: clientId };
+      query = createQueryObject(query, gte, lt);
 
-      if(!isNaN(gte)){
-        query.monto_restante = {};
-        query.monto_restante.$gte = gte;
-      }
-      
-      if(!isNaN(lt)){
-        query.monto_restante = query.monto_restante || {};
-        query.monto_restante.$lt = lt;
-      }
-      console.log(query)
       const cuentaPendientes = await CuentaPendiente.find(query);
       return cuentaPendientes;
     } catch (error) {
-      console.log("error");
+      throw error;
     }
   },
   findCuentaPendienteById: async function (id) {
@@ -49,16 +29,15 @@ const cuentaPendienteRepository = {
       const cuentaPendiente = await CuentaPendiente.findById(id);
       return cuentaPendiente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   saveCuentaPendiente: async function (_cuentaPendiente) {
     try {
       const cuentaPendiente = await CuentaPendiente.create(_cuentaPendiente);
-      console.log(cuentaPendiente);
       return cuentaPendiente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   updateCuentaPendienteById: async function (id, _cuentaPendiente) {
@@ -69,7 +48,7 @@ const cuentaPendienteRepository = {
       );
       return cuentaPendiente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
   deleteCuentaPendienteById: async function (id) {
@@ -77,7 +56,7 @@ const cuentaPendienteRepository = {
       const cuentaPendiente = await CuentaPendiente.findByIdAndRemove(id);
       return cuentaPendiente;
     } catch (error) {
-      console.log(error);
+      throw error;
     }
   },
 };
