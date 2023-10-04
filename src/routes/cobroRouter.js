@@ -6,7 +6,7 @@ const cobroRouter = express.Router();
 
 cobroRouter.get("/", async (request, response) => {
   try {
-    const cobros = await cobroController.findAllClients();
+    const cobros = await cobroController.findAllCobros();
     return response.status(200).json({ cobros });
   } catch (error) {
     return response.status(500).end();
@@ -16,7 +16,7 @@ cobroRouter.get("/", async (request, response) => {
 cobroRouter.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cobro = await cobroController.findClientById(id);
+    const cobro = await cobroController.findCobroById(id);
     return response.status(200).json({ cobro });
   } catch (error) {
     return response.status(500).end();
@@ -40,7 +40,7 @@ cobroRouter.post("/", async (request, response) => {
 cobroRouter.put("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cobro = await cobroController.updateClientById(id);
+    const cobro = await cobroController.updateCobroById(id);
     return response.status(200).json({ cobro });
   } catch (error) {
     return response.status(500).end();
@@ -50,7 +50,7 @@ cobroRouter.put("/:id", async (request, response) => {
 cobroRouter.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cobro = await cobroController.deleteClientById(id);
+    const cobro = await cobroController.deleteCobroById(id);
     return response.status(200).json({ cobro });
   } catch (error) {
     return response.status(500).end();
