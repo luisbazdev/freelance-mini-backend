@@ -15,7 +15,7 @@ const clienteRouter = express.Router();
  */
 clienteRouter.get("/", async (request, response) => {
   try {
-    const clientes = await asyncWrapper(clienteController.findAllClients);
+    const clientes = await asyncWrapper(clienteController.findAll);
     return response.status(200).json({ clientes });
   } catch (error) {
     return response.status(500).end();
@@ -34,7 +34,7 @@ clienteRouter.get("/", async (request, response) => {
 clienteRouter.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cliente = await asyncWrapper(clienteController.findClientById, [id]);
+    const cliente = await asyncWrapper(clienteController.findById, [id]);
     return response.status(200).json({ cliente });
   } catch (error) {
     switch (error.name) {
@@ -64,7 +64,7 @@ clienteRouter.post("/", async (request, response) => {
       avatar,
       no_cliente,
     };
-    const cliente = await asyncWrapper(clienteController.saveClient, [
+    const cliente = await asyncWrapper(clienteController.save, [
       cliente_body,
     ]);
     return response.status(201).json({ cliente });
@@ -91,7 +91,7 @@ clienteRouter.post("/", async (request, response) => {
 clienteRouter.put("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cliente = await asyncWrapper(clienteController.updateClientById, [
+    const cliente = await asyncWrapper(clienteController.updateById, [
       id,
     ]);
     return response.status(200).json({ cliente });
@@ -118,7 +118,7 @@ clienteRouter.put("/:id", async (request, response) => {
 clienteRouter.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cliente = await asyncWrapper(clienteController.deleteClientById, [
+    const cliente = await asyncWrapper(clienteController.deleteById, [
       id,
     ]);
     return response.status(200).json({ cliente });

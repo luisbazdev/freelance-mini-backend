@@ -16,7 +16,7 @@ const cobroRouter = express.Router();
 cobroRouter.get("/", async (request, response) => {
   try {
     const { nombre, gte, lt } = request.query;
-    const cobros = await asyncWrapper(cobroController.findAllCobros, [
+    const cobros = await asyncWrapper(cobroController.findAll, [
       nombre,
       gte,
       lt,
@@ -39,7 +39,7 @@ cobroRouter.get("/", async (request, response) => {
 cobroRouter.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cobro = await asyncWrapper(cobroController.findCobroById, [id]);
+    const cobro = await asyncWrapper(cobroController.findById, [id]);
     return response.status(200).json({ cobro });
   } catch (error) {
     switch (error.name) {
@@ -69,7 +69,7 @@ cobroRouter.post("/", async (request, response) => {
       id_cuenta_pendiente,
       monto_cobrado,
     };
-    const cobro = await asyncWrapper(cobroController.saveCobro, [cobro_body]);
+    const cobro = await asyncWrapper(cobroController.save, [cobro_body]);
     return response.status(201).json({ cobro });
   } catch (error) {
     switch (error.name) {
@@ -97,7 +97,7 @@ cobroRouter.put("/:id", async (request, response) => {
     const _cobro = {
       monto_cobrado: request.body.monto_cobrado,
     };
-    const cobro = await asyncWrapper(cobroController.updateCobroById, [
+    const cobro = await asyncWrapper(cobroController.updateById, [
       id,
       _cobro,
     ]);
@@ -125,7 +125,7 @@ cobroRouter.put("/:id", async (request, response) => {
 cobroRouter.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cobro = await asyncWrapper(cobroController.deleteCobroById, [id]);
+    const cobro = await asyncWrapper(cobroController.deleteById, [id]);
     return response.status(200).json({ cobro });
   } catch (error) {
     switch (error.name) {

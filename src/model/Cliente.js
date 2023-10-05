@@ -15,6 +15,12 @@ const clienteSchema = new mongoose.Schema({
   },
 });
 
+clienteSchema.pre('deleteOne', async function () {
+  const id = this.getQuery()["_id"];
+  await mongoose.model('CuentaPendiente').deleteMany({ id_cliente: id });
+  await mongoose.model('Cobro').deleteMany({ id_cliente: id });
+});
+
 const cliente = mongoose.model("Cliente", clienteSchema);
 
 module.exports = cliente;

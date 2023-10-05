@@ -18,6 +18,11 @@ const cuentaPendienteSchema = new mongoose.Schema({
   },
 });
 
+cuentaPendienteSchema.pre('deleteOne', async function () {
+  const id = this.getQuery()["_id"];
+  await mongoose.model('Cobro').deleteMany({ id_cuenta_pendiente: id });
+});
+
 const cuentaPendiente = mongoose.model(
   "CuentaPendiente",
   cuentaPendienteSchema

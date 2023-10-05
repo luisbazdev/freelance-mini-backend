@@ -3,11 +3,11 @@ const Cliente = require("../model/Cliente");
 const clienteRepository = {
   /**
    * Encuentra todos los clientes.
-   * @function findAllClients
+   * @function findAll
    * @returns {Promise<Cliente[]>} Una promesa que se resuelve con una lista de clientes.
    * @throws {Error} Si ocurre un error al obtener los clientes.
    */
-  findAllClients: async function () {
+  findAll: async function () {
     try {
       const clientes = await Cliente.find({});
       return clientes;
@@ -17,12 +17,12 @@ const clienteRepository = {
   },
   /**
    * Encuentra un cliente por su ID.
-   * @function findClientById
+   * @function findById
    * @param {string} id - El ID del cliente a buscar.
    * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente encontrado.
    * @throws {Error} Si ocurre un error al buscar el cliente.
    */
-  findClientById: async function (id) {
+  findById: async function (id) {
     try {
       const cliente = await Cliente.findById(id);
       return cliente;
@@ -49,12 +49,12 @@ const clienteRepository = {
   },
   /**
    * Guarda un cliente.
-   * @function saveClient
+   * @function save
    * @param {Cliente} _client - El cliente a guardar.
    * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente guardado.
    * @throws {Error} Si ocurre un error al guardar el cliente.
    */
-  saveClient: async function (_client) {
+  save: async function (_client) {
     try {
       const cliente = await Cliente.create(_client);
       return cliente;
@@ -64,13 +64,13 @@ const clienteRepository = {
   },
   /**
    * Actualiza un cliente por su ID.
-   * @function updateClientById
+   * @function updateById
    * @param {string} id - El ID del cliente a actualizar.
    * @param {Cliente} _cliente - El cliente actualizado.
    * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente actualizado.
    * @throws {Error} Si ocurre un error al actualizar el cliente.
    */
-  updateClientById: async function (id, _cliente) {
+  updateById: async function (id, _cliente) {
     try {
       const cliente = await Cliente.findByIdAndUpdate(id, _cliente);
       return cliente;
@@ -80,14 +80,15 @@ const clienteRepository = {
   },
   /**
    * Elimina un cliente por su ID.
-   * @function deleteClientById
+   * @function deleteById
    * @param {string} id - El ID del cliente a eliminar.
    * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente eliminado.
    * @throws {Error} Si ocurre un error al eliminar el cliente.
    */
-  deleteClientById: async function (id) {
+  deleteById: async function (id) {
     try {
-      const cliente = await Cliente.findByIdAndRemove(id);
+      const cliente = await Cliente.findById(id);
+      await Cliente.deleteOne({ _id: cliente.id });
       return cliente;
     } catch (error) {
       throw error;
@@ -95,7 +96,7 @@ const clienteRepository = {
   },
   /**
    * Verifica la existencia de un cliente.
-   * @function deleteClientById
+   * @function exists
    * @param {string} id - El ID del cliente.
    * @returns {Promise<Boolean>} Una promesa que se resuelve con el estado de cliente.
    * @throws {Error} Si ocurre un error al verificar la existencia del cliente.

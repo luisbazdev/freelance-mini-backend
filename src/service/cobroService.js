@@ -12,11 +12,11 @@ const asyncWrapper = require("../utils/asyncWrapper");
 const cobroService = {
   /**
    * Encuentra todos los cobros.
-   * @function findAllCobros
+   * @function findAll
    * @returns {Promise<Cobro[]>} Una promesa que se resuelve con una lista de cobros.
    */
-  findAllCobros: async function (gte, lt) {
-    const cobros = await asyncWrapper(cobroRepository.findAllCobros, [
+  findAll: async function (gte, lt) {
+    const cobros = await asyncWrapper(cobroRepository.findAll, [
       Number(gte),
       Number(lt),
     ]);
@@ -24,17 +24,17 @@ const cobroService = {
   },
   /**
    * Encuentra todos los cobros que pertenezcan a un cliente con un nombre especifico.
-   * @function findAllCobrosByName
+   * @function findAllByName
    * @param {string} nombre - El nombre del cliente a buscar.
    * @param {string} gte - El minimo monto cobrado.
    * @param {string} lt - El maximo monto cobrado.
    * @returns {Promise<Cobro[]>} Una promesa que se resuelve con una lista de cobros.
    */
-  findAllCobrosByName: async function (nombre, gte, lt) {
+  findAllByName: async function (nombre, gte, lt) {
     const cliente = await asyncWrapper(clienteRepository.findFirstByName, [
       nombre,
     ]);
-    const cobros = await asyncWrapper(cobroRepository.findAllCobrosByClientId, [
+    const cobros = await asyncWrapper(cobroRepository.findAllByClientId, [
       cliente.id,
       Number(gte),
       Number(lt),
@@ -43,33 +43,35 @@ const cobroService = {
   },
   /**
    * Encuentra un cobro por su ID.
-   * @function findCobroById
+   * @function findById
    * @param {string} id - El ID del cobro a buscar.
    * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro encontrado.
    */
-  findCobroById: async function (id) {
-    const cobro = await asyncWrapper(cobroRepository.findCobroById, [id]);
+  findById: async function (id) {
+    const cobro = await asyncWrapper(cobroRepository.findById, [id]);
     return cobro;
   },
   /**
    * Guarda un cobro.
-   * @function saveCobro
+   * @function save
    * @param {Cobro} _cobro - El cobro a guardar.
    * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro guardado.
    */
-  saveCobro: async function (_cobro) {
+  save: async function (_cobro) {
     // Recordar cerrar la session...
     const session = await mongoose.startSession();
     try {
       const { id_cliente, id_cuenta_pendiente, monto_cobrado } = _cobro;
 
       const cuentaPendiente =
-        await cuentaPendienteRepository.findCuentaPendienteById(
+        await cuentaPendienteRepository.findById(
           id_cuenta_pendiente
         );
 
       // Si la cuenta pendiente no le pertenece al cliente, o el
       // monto a cobrar es mayor que el monto actual, terminar aqui
+
+      // revisar como simplificar aca
       if (
         cuentaPendiente.id_cliente != id_cliente ||
         cuentaPendiente.monto_restante < monto_cobrado ||
@@ -117,13 +119,13 @@ const cobroService = {
   },
   /**
    * Actualiza un cobro por su ID.
-   * @function updateCobroById
+   * @function updateById
    * @param {string} id - El ID del cobro a actualizar.
    * @param {Cobro} _cobro - El cobro actualizado.
    * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro actualizado.
    */
-  updateCobroById: async function (id, _cobro) {
-    const cobro = await asyncWrapper(cobroRepository.updateCobroById, [
+  updateById: async function (id, _cobro) {
+    const cobro = await asyncWrapper(cobroRepository.updateById, [
       id,
       _cobro,
     ]);
@@ -131,12 +133,12 @@ const cobroService = {
   },
   /**
    * Elimina un cobro por su ID.
-   * @function deleteCobroById
+   * @function deleteById
    * @param {string} id - El ID del cobro a eliminar.
    * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro eliminado.
    */
-  deleteCobroById: async function (id) {
-    const cobro = await asyncWrapper(cobroRepository.deleteCobroById, [id]);
+  deleteById: async function (id) {
+    const cobro = await asyncWrapper(cobroRepository.deleteById, [id]);
     return cobro;
   },
 };

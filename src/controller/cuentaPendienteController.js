@@ -7,75 +7,75 @@ const cuentaPendienteController = {
    * @param {string} nombre - El nombre del cliente.
    * @param {string} gte - El minimo monto restante a cobrar.
    * @param {string} lt - El maximo monto restante a cobrar.
-   * @function findAllCuentaPendientes
+   * @function findAll
    * @returns {Promise<CuentaPendiente[]>} Una promesa que se resuelve con una lista de cuentas pendientes.
    */
-  findAllCuentaPendientes: async function (nombre, gte, lt) {
+  findAll: async function (nombre, gte, lt) {
     let cuentaPendientes;
 
     if (nombre) {
       cuentaPendientes = await asyncWrapper(
-        cuentaPendienteService.findAllCuentaPendientesByName,
+        cuentaPendienteService.findAllByClientName,
         [nombre, gte, lt]
       );
       return cuentaPendientes;
     }
 
     cuentaPendientes = await asyncWrapper(
-      cuentaPendienteService.findAllCuentaPendientes,
+      cuentaPendienteService.findAll,
       [gte, lt]
     );
     return cuentaPendientes;
   },
   /**
    * Encuentra una cuenta pendiente por su ID.
-   * @function findCuentaPendienteById
+   * @function findById
    * @param {string} id - El ID de la cuenta pendiente a buscar.
    * @returns {Promise<CuentaPendiente>} Una promesa que se resuelve con la cuenta pendiente encontrada.
    */
-  findCuentaPendienteById: async function (id) {
+  findById: async function (id) {
     const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteService.findCuentaPendienteById,
+      cuentaPendienteService.findById,
       [id]
     );
     return cuentaPendiente;
   },
   /**
    * Guarda una cuenta pendiente.
-   * @function saveCuentaPendiente
+   * @function save
    * @param {CuentaPendiente} _cuentaPendiente - La cuenta pendiente a guardar.
    * @returns {Promise<CuentaPendiente>} Una promesa que se resuelve con la cuenta pendiente guardada.
    */
-  saveCuentaPendiente: async function (_cuentaPendiente) {
+  save: async function (_cuentaPendiente) {
     const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteService.saveCuentaPendiente,
+      cuentaPendienteService.save,
       [_cuentaPendiente]
     );
     return cuentaPendiente;
   },
   /**
    * Actualiza una cuenta pendiente por su ID.
-   * @function updateCuentaPendienteById
+   * @function updateById
    * @param {string} id - El ID de la cuenta pendiente a actualizar.
    * @param {CuentaPendiente} _cuentaPendiente - La cuenta pendiente actualizada.
    * @returns {Promise<CuentaPendiente>} Una promesa que se resuelve con la cuenta pendiente actualizada.
    */
-  updateCuentaPendienteById: async function (id, _cuentaPendiente) {
+  updateById: async function (id, _cuentaPendiente) {
     const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteService.updateCuentaPendienteById,
+      cuentaPendienteService.updateById,
       [id, _cuentaPendiente]
     );
     return cuentaPendiente;
   },
   /**
    * Elimina una cuenta pendiente por su ID.
-   * @function deleteCuentaPendienteById
+   * @function deleteById
    * @param {string} id - El ID de la cuenta pendiente a eliminar.
    * @returns {Promise<CuentaPendiente>} Una promesa que se resuelve con la cuenta pendiente eliminada.
    */
-  deleteCuentaPendienteById: async function (id) {
+  deleteById: async function (id) {
     const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteService.deleteCuentaPendienteById,
+      cuentaPendienteService.deleteById,
       [id]
     );
     return cuentaPendiente;

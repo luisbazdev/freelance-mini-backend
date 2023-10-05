@@ -17,7 +17,7 @@ cuentaPendienteRouter.get("/", async (request, response) => {
   try {
     const { nombre, gte, lt } = request.query;
     const cuentaPendientes = await asyncWrapper(
-      cuentaPendienteController.findAllCuentaPendientes,
+      cuentaPendienteController.findAll,
       [nombre, gte, lt]
     );
     return response.status(200).json({ cuentaPendientes });
@@ -39,7 +39,7 @@ cuentaPendienteRouter.get("/:id", async (request, response) => {
   try {
     const { id } = request.params;
     const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteController.findCuentaPendienteById,
+      cuentaPendienteController.findById,
       [id]
     );
     return response.status(200).json({ cuentaPendiente });
@@ -67,7 +67,7 @@ cuentaPendienteRouter.post("/", async (request, response) => {
   try {
     const { id_cliente, monto_restante } = request.body;
     const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteController.saveCuentaPendiente,
+      cuentaPendienteController.save,
       [{ id_cliente, monto_restante }]
     );
     return response.status(201).json({ cuentaPendiente });
@@ -96,12 +96,11 @@ cuentaPendienteRouter.put("/:id", async (request, response) => {
     const { id } = request.params;
     const { monto_restante } = request.body;
     const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteController.updateCuentaPendienteById,
+      cuentaPendienteController.updateById,
       [id, { monto_restante }]
     );
     return response.status(200).json({ cuentaPendiente });
   } catch (error) {
-    console.log(error.name);
     switch (error.name) {
       case "ValidationError":
         return response.status(400).end();
@@ -128,7 +127,7 @@ cuentaPendienteRouter.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
     const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteController.deleteCuentaPendienteById,
+      cuentaPendienteController.deleteById,
       [id]
     );
     return response.status(200).json({ cuentaPendiente });
