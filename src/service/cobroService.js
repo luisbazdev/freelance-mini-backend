@@ -58,20 +58,17 @@ const cobroService = {
    * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro guardado.
    */
   save: async function (_cobro) {
-    // Recordar cerrar la session...
     const session = await mongoose.startSession();
+
     try {
       const { id_cliente, id_cuenta_pendiente, monto_cobrado } = _cobro;
 
-      const cuentaPendiente =
-        await cuentaPendienteRepository.findById(
-          id_cuenta_pendiente
-        );
+      const cuentaPendiente = await cuentaPendienteRepository.findById(
+        id_cuenta_pendiente
+      );
 
       // Si la cuenta pendiente no le pertenece al cliente, o el
       // monto a cobrar es mayor que el monto actual, terminar aqui
-
-      // revisar como simplificar aca
       if (
         cuentaPendiente.id_cliente != id_cliente ||
         cuentaPendiente.monto_restante < monto_cobrado ||
@@ -109,13 +106,11 @@ const cobroService = {
       await session.commitTransaction();
       return cobro;
     } catch (error) {
-      //await session.abortTransaction();
+      await session.abortTransaction();
       throw error;
-    }
-    /*finally {
+    } finally {
       session.endSession();
-      mongoose.connection.close();
-    }*/
+    }
   },
   /**
    * Actualiza un cobro por su ID.
@@ -125,10 +120,7 @@ const cobroService = {
    * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro actualizado.
    */
   updateById: async function (id, _cobro) {
-    const cobro = await asyncWrapper(cobroRepository.updateById, [
-      id,
-      _cobro,
-    ]);
+    const cobro = await asyncWrapper(cobroRepository.updateById, [id, _cobro]);
     return cobro;
   },
   /**

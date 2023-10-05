@@ -58,15 +58,13 @@ clienteRouter.get("/:id", async (request, response) => {
  */
 clienteRouter.post("/", async (request, response) => {
   try {
-    const { name, avatar, no_cliente } = request.body;
+    const { nombre, avatarUrl, no_cliente } = request.body;
     const cliente_body = {
-      name,
-      avatar,
+      nombre,
+      avatarUrl,
       no_cliente,
     };
-    const cliente = await asyncWrapper(clienteController.save, [
-      cliente_body,
-    ]);
+    const cliente = await asyncWrapper(clienteController.save, [cliente_body]);
     return response.status(201).json({ cliente });
   } catch (error) {
     switch (error.name) {
@@ -91,8 +89,15 @@ clienteRouter.post("/", async (request, response) => {
 clienteRouter.put("/:id", async (request, response) => {
   try {
     const { id } = request.params;
+    const { nombre, avatarUrl, no_cliente } = request.body;
+    const cliente_body = {
+      nombre,
+      avatarUrl,
+      no_cliente,
+    };
     const cliente = await asyncWrapper(clienteController.updateById, [
       id,
+      cliente_body,
     ]);
     return response.status(200).json({ cliente });
   } catch (error) {
@@ -118,13 +123,14 @@ clienteRouter.put("/:id", async (request, response) => {
 clienteRouter.delete("/:id", async (request, response) => {
   try {
     const { id } = request.params;
-    const cliente = await asyncWrapper(clienteController.deleteById, [
-      id,
-    ]);
+    const cliente = await asyncWrapper(clienteController.deleteById, [id]);
     return response.status(200).json({ cliente });
   } catch (error) {
     switch (error.name) {
       case "CastError":
+        return response.status(400).end();
+
+      case "TypeError":
         return response.status(400).end();
 
       default:

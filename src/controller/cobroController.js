@@ -53,10 +53,7 @@ const cobroController = {
    * @returns {Promise<Cobro>} Una promesa que se resuelve con el cobro actualizado.
    */
   updateById: async function (id, _cobro) {
-    const cobro = await asyncWrapper(cobroService.updateById, [
-      id,
-      _cobro,
-    ]);
+    const cobro = await asyncWrapper(cobroService.updateById, [id, _cobro]);
     return cobro;
   },
   /**

@@ -66,10 +66,9 @@ cuentaPendienteRouter.get("/:id", async (request, response) => {
 cuentaPendienteRouter.post("/", async (request, response) => {
   try {
     const { id_cliente, monto_restante } = request.body;
-    const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteController.save,
-      [{ id_cliente, monto_restante }]
-    );
+    const cuentaPendiente = await asyncWrapper(cuentaPendienteController.save, [
+      { id_cliente, monto_restante },
+    ]);
     return response.status(201).json({ cuentaPendiente });
   } catch (error) {
     switch (error.name) {

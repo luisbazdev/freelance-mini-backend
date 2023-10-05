@@ -40,7 +40,7 @@ const clienteRepository = {
   findFirstByName: async function (nombre) {
     try {
       const cliente = await Cliente.findOne({
-        name: { $regex: nombre, $options: "i" },
+        nombre: { $regex: nombre, $options: "i" },
       });
       return cliente;
     } catch (error) {
@@ -72,7 +72,15 @@ const clienteRepository = {
    */
   updateById: async function (id, _cliente) {
     try {
-      const cliente = await Cliente.findByIdAndUpdate(id, _cliente);
+      const clienteExiste = await Cliente.exists({ _id: id });
+      if (!clienteExiste) {
+        const err = new Error();
+        err.name = "CastError";
+        throw err;
+      }
+      const cliente = await Cliente.findByIdAndUpdate(id, _cliente, {
+        returnDocument: "after",
+      });
       return cliente;
     } catch (error) {
       throw error;
@@ -103,8 +111,8 @@ const clienteRepository = {
    */
   exists: async function (id) {
     try {
-      const usuarioExiste = await Cliente.exists({ _id: id });
-      return usuarioExiste ? true : false;
+      const clienteExiste = await Cliente.exists({ _id: id });
+      return clienteExiste ? true : false;
     } catch (error) {
       throw error;
     }

@@ -13,6 +13,7 @@ const app = express();
   try {
     const port = process.env.PORT;
 
+    // Conectar a la base de datos primero
     await connectToDatabase();
 
     app.use(bodyParser.json());

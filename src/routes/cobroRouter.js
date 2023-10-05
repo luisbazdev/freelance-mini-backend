@@ -23,7 +23,13 @@ cobroRouter.get("/", async (request, response) => {
     ]);
     return response.status(200).json({ cobros });
   } catch (error) {
-    return response.status(500).end();
+    switch (error.name) {
+      case "TypeError":
+        return response.status(400).end();
+
+      default:
+        return response.status(500).end();
+    }
   }
 });
 /**
@@ -97,10 +103,7 @@ cobroRouter.put("/:id", async (request, response) => {
     const _cobro = {
       monto_cobrado: request.body.monto_cobrado,
     };
-    const cobro = await asyncWrapper(cobroController.updateById, [
-      id,
-      _cobro,
-    ]);
+    const cobro = await asyncWrapper(cobroController.updateById, [id, _cobro]);
     return response.status(200).json({ cobro });
   } catch (error) {
     switch (error.name) {

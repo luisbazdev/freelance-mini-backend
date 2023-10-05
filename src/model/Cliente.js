@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const clienteSchema = new mongoose.Schema({
-  name: {
+  nombre: {
     type: String,
     required: true,
   },
-  avatar: {
+  avatarUrl: {
     type: String,
     required: true,
   },
@@ -15,10 +15,10 @@ const clienteSchema = new mongoose.Schema({
   },
 });
 
-clienteSchema.pre('deleteOne', async function () {
+clienteSchema.pre("deleteOne", async function () {
   const id = this.getQuery()["_id"];
-  await mongoose.model('CuentaPendiente').deleteMany({ id_cliente: id });
-  await mongoose.model('Cobro').deleteMany({ id_cliente: id });
+  await mongoose.model("CuentaPendiente").deleteMany({ id_cliente: id });
+  await mongoose.model("Cobro").deleteMany({ id_cliente: id });
 });
 
 const cliente = mongoose.model("Cliente", clienteSchema);

@@ -21,10 +21,10 @@ const cuentaPendienteController = {
       return cuentaPendientes;
     }
 
-    cuentaPendientes = await asyncWrapper(
-      cuentaPendienteService.findAll,
-      [gte, lt]
-    );
+    cuentaPendientes = await asyncWrapper(cuentaPendienteService.findAll, [
+      gte,
+      lt,
+    ]);
     return cuentaPendientes;
   },
   /**
@@ -47,10 +47,9 @@ const cuentaPendienteController = {
    * @returns {Promise<CuentaPendiente>} Una promesa que se resuelve con la cuenta pendiente guardada.
    */
   save: async function (_cuentaPendiente) {
-    const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteService.save,
-      [_cuentaPendiente]
-    );
+    const cuentaPendiente = await asyncWrapper(cuentaPendienteService.save, [
+      _cuentaPendiente,
+    ]);
     return cuentaPendiente;
   },
   /**

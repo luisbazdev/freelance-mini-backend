@@ -11,7 +11,7 @@ const cobroRepository = {
   findAll: async function (gte, lt) {
     try {
       let query = {};
-      query = createQueryObject(query, gte, lt);
+      query = createQueryObject(query, gte, lt, "monto_cobrado");
 
       const cobros = await Cobro.find(query);
       return cobros;
@@ -30,8 +30,8 @@ const cobroRepository = {
    */
   findAllByClientId: async function (clientId, gte, lt) {
     try {
-      let query = { id_cobro: clientId };
-      query = createQueryObject(query, gte, lt);
+      let query = { id_cliente: clientId };
+      query = createQueryObject(query, gte, lt, "monto_cobrado");
 
       const cobros = await Cobro.find(query);
       return cobros;
@@ -79,7 +79,9 @@ const cobroRepository = {
    */
   updateById: async function (id, _cobro) {
     try {
-      const cobro = await Cobro.findByIdAndUpdate(id, _cobro);
+      const cobro = await Cobro.findByIdAndUpdate(id, _cobro, {
+        returnDocument: "after",
+      });
       return cobro;
     } catch (error) {
       throw error;

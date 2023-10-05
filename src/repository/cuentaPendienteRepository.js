@@ -13,7 +13,7 @@ const cuentaPendienteRepository = {
   findAll: async function (gte, lt) {
     try {
       let query = {};
-      query = createQueryObject(query, gte, lt);
+      query = createQueryObject(query, gte, lt, "monto_restante");
 
       const cuentaPendientes = await CuentaPendiente.find(query);
       return cuentaPendientes;
@@ -33,7 +33,7 @@ const cuentaPendienteRepository = {
   findAllByClientId: async function (clientId, gte, lt) {
     try {
       let query = { id_cliente: clientId };
-      query = createQueryObject(query, gte, lt);
+      query = createQueryObject(query, gte, lt, "monto_restante");
 
       const cuentaPendientes = await CuentaPendiente.find(query);
       return cuentaPendientes;
@@ -103,7 +103,7 @@ const cuentaPendienteRepository = {
   deleteById: async function (id) {
     try {
       const cuentaPendiente = await CuentaPendiente.findById(id);
-      await CuentaPendiente.deleteOne({ _id: cuentaPendiente.id })
+      await CuentaPendiente.deleteOne({ _id: cuentaPendiente.id });
       return cuentaPendiente;
     } catch (error) {
       throw error;

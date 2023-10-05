@@ -28,9 +28,7 @@ const clienteService = {
    * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente guardado.
    */
   save: async function (_cliente) {
-    const cliente = await asyncWrapper(clienteRepository.save, [
-      _cliente,
-    ]);
+    const cliente = await asyncWrapper(clienteRepository.save, [_cliente]);
     return cliente;
   },
   /**
@@ -54,9 +52,7 @@ const clienteService = {
    * @returns {Promise<Cliente>} Una promesa que se resuelve con el cliente eliminado.
    */
   deleteById: async function (id) {
-    const cliente = await asyncWrapper(clienteRepository.deleteById, [
-      id,
-    ]);
+    const cliente = await asyncWrapper(clienteRepository.deleteById, [id]);
     return cliente;
   },
 };

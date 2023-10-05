@@ -62,18 +62,15 @@ const cuentaPendienteService = {
 
     // Si el usuario no existe, o el monto a pagar
     // es negativo o igual a cero, terminar aqui
-
-    // testear esto..., creo que la segunda parte del if no es necesaria
     if (!usuarioExiste || _cuentaPendiente.monto_restante <= 0) {
       const error = new Error("La validacion no fue exitosa");
       error.name = "ValidationError";
       throw error;
     }
 
-    const cuentaPendiente = await asyncWrapper(
-      cuentaPendienteRepository.save,
-      [_cuentaPendiente]
-    );
+    const cuentaPendiente = await asyncWrapper(cuentaPendienteRepository.save, [
+      _cuentaPendiente,
+    ]);
     return cuentaPendiente;
   },
   /**

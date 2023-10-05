@@ -1,12 +1,12 @@
-function createQueryObject(query, gte, lt) {
+function createQueryObject(query, gte, lt, nombre) {
   if (!isNaN(gte)) {
-    query.monto_restante = {};
-    query.monto_restante.$gte = gte;
+    query[nombre] = {};
+    query[nombre].$gte = gte;
   }
 
   if (!isNaN(lt)) {
-    query.monto_restante = query.monto_restante || {};
-    query.monto_restante.$lt = lt;
+    query[nombre] = query[nombre] || {};
+    query[nombre].$lt = lt;
   }
 
   return query;
