@@ -4,7 +4,7 @@ Para correr la API, seguir los siguientes pasos:
 
 1. Ejecutar `npm install` en el directorio raiz del proyecto
 2. Crear variables de entorno `MONGO_URL` y `PORT` en el archivo `.env` (revisar la seccion de variables de entorno, por favor) 
-3. Ejecutar `node --env-file .env index` desde el directorio raiz del proyecto (prestar atencion a la parte de `--env-file .env`, la cual carga las variables de entorno dentro del archivo `.env`)
+3. Ejecutar `npm start` desde el directorio raiz del proyecto (importante configurado las variables de entorno antes)
 
 
 ## Variables de entorno
